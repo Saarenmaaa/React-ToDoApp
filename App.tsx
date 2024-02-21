@@ -5,7 +5,7 @@
  * @format
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -15,15 +15,38 @@ import {
   Text,
   useColorScheme,
   View,
+  GestureResponderEvent
 } from 'react-native';
 
 import {
   Colors,
   DebugInstructions,
-  Header,
+  //Header,
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
+import Header from './src/components/Header/Header';
+import Input from './src/components/Input/Input';
+import SubmitButton from './src/components/SubmitButton/SubmitButton';
+
+export type ToDoItem = {
+  title: string,
+  id: number,
+  complete: boolean,
+}
+
+const testToDoItems: ToDoItem[] = [
+  {
+    title: 'Do the dishes',
+    id: 0,
+    complete: false
+  },
+  {
+    title: 'Empty the bin',
+    id: 1,
+    complete: false
+  },
+]
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -56,11 +79,34 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [inputValue, setInputValue] = useState('');
+  const [todos, setTodos] = useState<ToDoItem[]>(testToDoItems);
 
+  const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
+
+  const inputValueChange = (inputValue: string) => {
+    console.log(`input changes ${inputValue}`)
+    setInputValue(inputValue);
+  }
+
+  const submitToDo = (event: GestureResponderEvent) => {
+    if(inputValue.match(/^\s*$/)) {
+      console.log(`submitTodo inputValue is empty`);
+      return;
+    }
+    const toDoItem: ToDoItem = {
+      title: inputValue,
+      id: todos.length,
+      complete: false
+    }
+    const ntodos = [...todos, toDoItem];
+    setTodos(ntodos);
+    setInputValue('');
+    console.log(`submitToDo ${JSON.stringify(ntodos)}`);
+  }
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -68,28 +114,31 @@ function App(): React.JSX.Element {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={backgroundStyle.backgroundColor}
       />
+
+      <Header title="Things to be Done"/>
+
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
         style={backgroundStyle}>
-        <Header />
+
         <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
+          style={styles.viewContainer}>
+          <Section title="List of things to Complete">
+            {/*ToDo placeholder*/}
           </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+
+          <Input
+            inputValue={inputValue}
+            inputValueChange={inputValueChange}
+            placeholderText='What needs to be done?'
+          >
+          </Input>
+
+          <SubmitButton
+            submitToDo={submitToDo}
+            >
+          </SubmitButton>
+
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -97,13 +146,23 @@ function App(): React.JSX.Element {
 }
 
 const styles = StyleSheet.create({
+  viewContainer: {
+    marginTop: 32,
+    alignItems: 'center',
+    paddingHorizontal: 32,
+    width: '100%'
+  },
   sectionContainer: {
     marginTop: 32,
+    alignItems: 'center',
     paddingHorizontal: 24,
   },
   sectionTitle: {
     fontSize: 24,
     fontWeight: '600',
+
+    borderWidth: 1,
+    borderColor: 'green',
   },
   sectionDescription: {
     marginTop: 8,
