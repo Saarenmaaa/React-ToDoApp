@@ -30,12 +30,12 @@ const SubmitButton: React.FC<Props>= ({submitToDo}) => {
 
 const styles = StyleSheet.create({
     buttonContainer: {
-      marginLeft: 20,
-      marginRight: 20,
-      width: "100%",
+      //marginLeft: 20,
+      //marginRight: 20,
+      //width: "100%",
 
-      borderWidth: 1,
-      borderColor: 'green',
+      //borderWidth: 1,
+      //borderColor: 'green',
     },
     button: {
       height: 50,

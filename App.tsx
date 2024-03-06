@@ -28,22 +28,23 @@ import {
 import Header from './src/components/Header/Header';
 import Input from './src/components/Input/Input';
 import SubmitButton from './src/components/SubmitButton/SubmitButton';
+import ToDoList from './src/components/ToDoList/ToDoList';
 
 export type ToDoItem = {
   title: string,
-  id: number,
+  id: string,
   complete: boolean,
 }
 
 const testToDoItems: ToDoItem[] = [
   {
     title: 'Do the dishes',
-    id: 0,
+    id: "0",
     complete: false
   },
   {
     title: 'Empty the bin',
-    id: 1,
+    id: "1",
     complete: false
   },
 ]
@@ -79,7 +80,7 @@ function Section({children, title}: SectionProps): React.JSX.Element {
 }
 
 function App(): React.JSX.Element {
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState<string>();
   const [todos, setTodos] = useState<ToDoItem[]>(testToDoItems);
 
   const isDarkMode = useColorScheme() === 'dark';
@@ -93,13 +94,13 @@ function App(): React.JSX.Element {
   }
 
   const submitToDo = (event: GestureResponderEvent) => {
-    if(inputValue.match(/^\s*$/)) {
+    if(!inputValue  || inputValue.match(/^\s*$/)) {
       console.log(`submitTodo inputValue is empty`);
       return;
     }
     const toDoItem: ToDoItem = {
       title: inputValue,
-      id: todos.length,
+      id: todos.length.toString(),
       complete: false
     }
     const ntodos = [...todos, toDoItem];
@@ -107,6 +108,9 @@ function App(): React.JSX.Element {
     setInputValue('');
     console.log(`submitToDo ${JSON.stringify(ntodos)}`);
   }
+
+  const toggleCompleteToDo = (idx: string) => {}
+  const deleteToDo = (idx: string) => {}
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -124,7 +128,7 @@ function App(): React.JSX.Element {
         <View
           style={styles.viewContainer}>
           <Section title="List of things to Complete">
-            {/*ToDo placeholder*/}
+            {/* ToDo placeholder */}
           </Section>
 
           <Input
@@ -134,10 +138,13 @@ function App(): React.JSX.Element {
           >
           </Input>
 
-          <SubmitButton
-            submitToDo={submitToDo}
-            >
-          </SubmitButton>
+          <SubmitButton submitToDo={submitToDo}></SubmitButton>
+          <ToDoList 
+            todos={todos}
+            toggleCompleteToDo={toggleCompleteToDo}
+            deleteToDo={deleteToDo}
+          ></ToDoList>
+
 
         </View>
       </ScrollView>

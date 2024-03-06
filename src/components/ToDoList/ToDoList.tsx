@@ -7,24 +7,27 @@ import {
   View,
 } from 'react-native';
 import { ToDoItem } from '../../../App';
+import OneToDo from './OneToDo';
 
 interface Props {
     todos: ToDoItem[]
+    toggleCompleteToDo: (idx: string) => void;
+    deleteToDo: (idx: string) => void;
 }
 
-const Header: React.FC<Props>= ({todos}) => {
+const ToDoList: React.FC<Props>= ({todos, toggleCompleteToDo, deleteToDo}) => {
     let allToDos = todos.map((todo, i) => {
         return (
             <OneToDo
                 key={todo.id}
-                todo={todo}
+                todoitem={todo}
+                toggleCompleteToDo={toggleCompleteToDo}
+                deleteToDo={deleteToDo}
             />
         )
     });
     return (
-        <View style={styles.container}>
-            {allToDos}
-        </View>
+        <View style={styles.container}>{allToDos}</View>
     );
 }
 
