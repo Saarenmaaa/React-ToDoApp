@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 
 interface Props {
-    inputValue : string,
+    inputValue : string|undefined,
     inputValueChange: (text: string) => void,
     placeholderText: string,
 }

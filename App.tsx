@@ -94,7 +94,7 @@ function App(): React.JSX.Element {
   }
 
   const submitToDo = (event: GestureResponderEvent) => {
-    if(!inputValue  || inputValue.match(/^\s*$/)) {
+    if(!inputValue || inputValue.match(/^\s*$/)) {
       console.log(`submitTodo inputValue is empty`);
       return;
     }
