@@ -14,7 +14,7 @@ interface Props {
   toggleCompleteToDo: (idx: string) => void;
   deleteToDo: (idx: string) => void;
 }
-
+// OneTodo Component Holds all in TodoItem
 const OneToDo: React.FC<Props>= ({todoitem, toggleCompleteToDo, deleteToDo}) => {
     return (
         <View style={styles.todoContainer}>
@@ -37,18 +37,20 @@ const OneToDo: React.FC<Props>= ({todoitem, toggleCompleteToDo, deleteToDo}) => 
 
 const styles = StyleSheet.create({
     todoContainer: {
-      marginLeft: 20,
-      marginRight: 20,
-
+      marginLeft: 10,
+      marginRight: 10,
+      marginVertical: 2,
+      borderRadius: 5,
+      borderColor: 'black',
       flexDirection: 'row',
-
-      paddingVertical: 20,
+      padding: 5,
       alignItems: 'center',
       width: "100%",
-      //backgroundColor: '#f5f5D5'
+      backgroundColor: '#FEEAE6'
+
     },
     todoText: {
-      fontSize: 17,
+      fontSize: 14,
     },
     buttons: {
       flex: 1, 

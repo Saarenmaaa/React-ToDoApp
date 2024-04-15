@@ -13,6 +13,7 @@ interface Props {
     placeholderText: string,
 }
 
+// Input Component
 const Input: React.FC<Props>= ({inputValue, inputValueChange, placeholderText}) => {
     return (
         <View style={styles.inputContainer}>
@@ -21,8 +22,7 @@ const Input: React.FC<Props>= ({inputValue, inputValueChange, placeholderText}) 
                 style={styles.input}
                 placeholder={placeholderText}
                 onChangeText={inputValueChange}
-            >
-            </TextInput>
+            ></TextInput>
         </View>
     );
 }
@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
       marginLeft: 20,
       marginRight: 20,
       width: "100%",
-
       borderWidth: 1,
-      borderColor: 'green',
+      borderColor: '#442C2E',
     },
     input: {
+      backgroundColor: '#FEEAE6',
       height: 60,
       paddingLeft: 10,
       paddingRight: 10,

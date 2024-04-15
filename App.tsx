@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
@@ -15,13 +15,13 @@ import {
   Text,
   useColorScheme,
   View,
-  GestureResponderEvent
+  GestureResponderEvent,
+  TouchableHighlight,
 } from 'react-native';
 
 import {
   Colors,
   DebugInstructions,
-  //Header,
   LearnMoreLinks,
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
@@ -36,18 +36,7 @@ export type ToDoItem = {
   complete: boolean,
 }
 
-const testToDoItems: ToDoItem[] = [
-  {
-    title: 'Do the dishes',
-    id: "0",
-    complete: false
-  },
-  {
-    title: 'Empty the bin',
-    id: "1",
-    complete: false
-  },
-]
+const ToDoItems: ToDoItem[] = []
 
 type SectionProps = PropsWithChildren<{
   title: string;
@@ -79,20 +68,31 @@ function Section({children, title}: SectionProps): React.JSX.Element {
   );
 }
 
+// Saving and loading TodoList from local storage
+
+// App function
 function App(): React.JSX.Element {
   const [inputValue, setInputValue] = useState<string>();
-  const [todos, setTodos] = useState<ToDoItem[]>(testToDoItems);
+  const [todos, setTodos] = useState<ToDoItem[]>(ToDoItems);
+  const [filter, setFilter] = useState<String>("All");
+
+  const [display, setDisplay] = useState<ToDoItem[]>(todos);
+
 
   const isDarkMode = useColorScheme() === 'dark';
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FEDBD0',
+    flex: 1,
+    
   };
 
+  // Input Settings
   const inputValueChange = (inputValue: string) => {
     console.log(`input changes ${inputValue}`)
     setInputValue(inputValue);
   }
 
+  // Submit ToDO to todos State List
   const submitToDo = (event: GestureResponderEvent) => {
     if(!inputValue || inputValue.match(/^\s*$/)) {
       console.log(`submitTodo inputValue is empty`);
@@ -106,11 +106,54 @@ function App(): React.JSX.Element {
     const ntodos = [...todos, toDoItem];
     setTodos(ntodos);
     setInputValue('');
-    console.log(`submitToDo ${JSON.stringify(ntodos)}`);
   }
 
-  const toggleCompleteToDo = (idx: string) => {}
-  const deleteToDo = (idx: string) => {}
+  // Change complete status of todo Item
+  const toggleCompleteToDo = (idx: string) => {
+    const newList = todos.map(todo => {
+      if (idx === todo.id) {
+        return { ...todo, complete: !todo.complete };
+      } else {
+        return todo;
+      }
+    });
+    setTodos(newList);
+  };
+
+  // Delete toDO item from todoList
+  const deleteToDo = (idx: string) => {
+    const newTodoList = todos.filter(todo => todo.id !== idx);
+    setTodos(newTodoList);
+  };
+ 
+
+  // Set displayed list by All, Active and Complete todos when changes
+  useEffect(() => {
+    switch (filter) {
+      case "Active":
+        setDisplay(todos.filter(todo => !todo.complete));
+        break;
+      case "Complete":
+        setDisplay(todos.filter(todo => todo.complete));
+        break;
+      default:
+        setDisplay(todos);
+    }
+  }, [filter, todos]);
+
+  // Change sectionTitle based on used Filter
+  const sectionTitle = () => {
+    switch (filter) {
+      case "All":
+        return "All";
+      case "Active":
+        return "Active";
+      case "Complete":
+        return "Completed";
+      default:
+        return "All";
+    }
+  };
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -120,6 +163,7 @@ function App(): React.JSX.Element {
       />
 
       <Header title="Things to be Done"/>
+      <Section title={sectionTitle()} />
 
       <ScrollView
         contentInsetAdjustmentBehavior="automatic"
@@ -127,27 +171,43 @@ function App(): React.JSX.Element {
 
         <View
           style={styles.viewContainer}>
-          <Section title="List of things to Complete">
-            {/* ToDo placeholder */}
-          </Section>
-
           <Input
             inputValue={inputValue}
             inputValueChange={inputValueChange}
             placeholderText='What needs to be done?'
-          >
-          </Input>
+          ></Input>
 
           <SubmitButton submitToDo={submitToDo}></SubmitButton>
+
           <ToDoList 
-            todos={todos}
+            todos={display}
             toggleCompleteToDo={toggleCompleteToDo}
             deleteToDo={deleteToDo}
           ></ToDoList>
 
-
         </View>
       </ScrollView>
+      
+      <View style={styles.filterButtonContainer}>
+        <TouchableHighlight 
+          style={[styles.filterButtonText, filter === "All" && styles.selectedButton]}
+          onPress={() => setFilter("All")}
+        >
+          <Text style={[filter === "All" && styles.selectedButton]}>All</Text>
+        </TouchableHighlight>
+        <TouchableHighlight 
+          style={[styles.filterButtonText, filter === "Active" && styles.selectedButton]}
+          onPress={() => setFilter("Active")}
+        >
+          <Text style={[filter === "Active" && styles.selectedButton]}>Active</Text>
+        </TouchableHighlight>
+        <TouchableHighlight 
+          style={[styles.filterButtonText, filter === "Complete" && styles.selectedButton]}
+          onPress={() => setFilter("Complete")}
+        >
+          <Text style={[filter === "Complete" && styles.selectedButton]}>Completed</Text> 
+        </TouchableHighlight>
+      </View>
     </SafeAreaView>
   );
 }
@@ -157,27 +217,40 @@ const styles = StyleSheet.create({
     marginTop: 32,
     alignItems: 'center',
     paddingHorizontal: 32,
-    width: '100%'
+    width: '100%',
   },
   sectionContainer: {
     marginTop: 32,
     alignItems: 'center',
     paddingHorizontal: 24,
   },
+  filterButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  filterButtonText: {
+    padding: 10,
+    borderWidth: 1,
+    borderRadius: 5,
+    borderColor: '#442C2E',
+    margin: 5,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FEDBD0',
+  },
   sectionTitle: {
     fontSize: 24,
-    fontWeight: '600',
-
-    borderWidth: 1,
-    borderColor: 'green',
+    fontWeight: '200',
   },
   sectionDescription: {
-    marginTop: 8,
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: '500',
   },
-  highlight: {
-    fontWeight: '700',
+  selectedButton: {
+    backgroundColor: '#442C2E',
+    color: 'white'
   },
 });
 

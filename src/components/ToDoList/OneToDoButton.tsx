@@ -14,18 +14,22 @@ interface Props {
     complete: boolean,
     name: string
 }
-
+// Todo Done and Delete buttons
 const OneToDoButton: React.FC<Props>= ({name, complete, onPress}) => {
     return (
         <View style={styles.buttonContainer}>
             <TouchableHighlight
-                style={styles.button}
+                style={[
+                    styles.button,
+                    name === 'Done' && complete ? styles.completeButton : null,
+                    name === 'Delete' ? styles.deleteButton : null,
+                ]}
                 onPress={onPress}
             >
                 <Text 
                     style={[
                         styles.buttonText,
-                        complete ? styles.complete : null,
+                        complete ? styles.completeText : null,
                         name === 'Delete' ? styles.deleteButton: null]}>
                     {name}
                 </Text>
@@ -37,24 +41,27 @@ const OneToDoButton: React.FC<Props>= ({name, complete, onPress}) => {
 const styles = StyleSheet.create({
     buttonContainer: {
         alignItems: 'flex-end',
-        borderWidth: 1,
         borderColor: 'black',
     },
     button: {
       padding: 7,
       borderRadius: 4,
-      borderWidth: 1,
-      borderColor: 'black',
       marginRight: 5,
+      backgroundColor: '#ff5959'
     },
     buttonText: {
-        color: '#666666'
+        color: 'white'
     },
-    complete: {
-        color: 'green'
+    completeText: {
+        color: 'black',
+    },
+    completeButton: {
+        backgroundColor: 'lightgreen',
     },
     deleteButton: {
-        color: 'rgba(175, 47, 47, 1)'
+        color: '#FEEAE6',
+        backgroundColor: '#442C2E',
+        fontWeight: '500'
     },
     
   });

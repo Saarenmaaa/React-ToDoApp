@@ -10,7 +10,7 @@ import {
 interface Props {
     title: string;
 }
-
+// Header Component of ToDoApp
 const Header: React.FC<Props>= ({title}) => {
     return (
         <View style={styles.header}>
@@ -24,12 +24,11 @@ const styles = StyleSheet.create({
       marginTop: 32,
       paddingVertical: 20,
       alignItems: 'center',
-      backgroundColor: '#f5f5D5'
     },
     headerText: {
-      fontSize: 20,
+      fontSize: 40,
       color: '#212427',
-      fontWeight: '600',
+      fontWeight: '200',
     },
   });
 

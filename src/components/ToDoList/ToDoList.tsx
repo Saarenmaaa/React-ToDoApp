@@ -2,6 +2,7 @@
 
 import React from 'react';
 import {
+    ScrollView,
   StyleSheet,
   Text,
   View,
@@ -15,6 +16,7 @@ interface Props {
     deleteToDo: (idx: string) => void;
 }
 
+// ToDolist Component maps for all todo in todos
 const ToDoList: React.FC<Props>= ({todos, toggleCompleteToDo, deleteToDo}) => {
     let allToDos = todos.map((todo, i) => {
         return (
@@ -26,8 +28,11 @@ const ToDoList: React.FC<Props>= ({todos, toggleCompleteToDo, deleteToDo}) => {
             />
         )
     });
+    // ScrollView to display Large todolist
     return (
-        <View style={styles.container}>{allToDos}</View>
+        <ScrollView contentContainerStyle={styles.container}>
+            {allToDos}
+        </ScrollView>
     );
 }
 
@@ -35,10 +40,7 @@ const styles = StyleSheet.create({
     container: {
       alignItems: 'center',
       width: "100%",
-      padding: 20,
-
-      borderWidth: 1,
-      borderColor: 'black',
+      padding: 10,
     },
   });
 

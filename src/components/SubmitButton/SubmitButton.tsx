@@ -13,6 +13,7 @@ interface Props {
     submitToDo: (event: GestureResponderEvent) => void,
 }
 
+// Submit Button component settings
 const SubmitButton: React.FC<Props>= ({submitToDo}) => {
     return (
         <View style={styles.buttonContainer}>
@@ -21,7 +22,7 @@ const SubmitButton: React.FC<Props>= ({submitToDo}) => {
                 onPress={submitToDo}
             >
                 <Text style={styles.buttonText}>
-                Add Item
+                Add To Do
                 </Text>
             </TouchableHighlight>
         </View>
@@ -30,31 +31,24 @@ const SubmitButton: React.FC<Props>= ({submitToDo}) => {
 
 const styles = StyleSheet.create({
     buttonContainer: {
-      //marginLeft: 20,
-      //marginRight: 20,
-      //width: "100%",
-
-      //borderWidth: 1,
-      //borderColor: 'green',
+        alignSelf: 'flex-end',
     },
     button: {
       height: 50,
-      paddingLeft: 20,
-      paddingRight: 20,
-      width: 200,
-      marginTop: 20,
-      backgroundColor: '#f5f5D5',
+      width: 100,
+      marginBottom: 10,
+      backgroundColor: '#442C2E',
 
-      borderRadius: 10,
-      borderWidth: 1,
-      borderColor: 'black',
+      borderRadius: 3,
+      borderColor: '#FEEAE6',
 
       alignItems: 'center',
       justifyContent: 'center'
     },
     buttonText: {
-        fontSize: 20,
-        fontWeight: "600",
+        color: '#FEDBD0',
+        fontSize: 15,
+        fontWeight: "300",
     },
   });
 
